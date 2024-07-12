@@ -26,8 +26,18 @@ def gauss_seidel(A, b, x0, tol, max_iter):
     for k in range(max_iter):
         x_old = x.copy()
         for i in range(n):
-            sum1 = sum(A[i][j] * x[j] for j in range(i))
-            sum2 = sum(A[i][j] * x_old[j] for j in range(i + 1, n))
+            sum1 = 0
+            for j in range(i):
+                A_ij = A[i][j]
+                x_j = x[j]
+                sum1 += A_ij * x_j
+            
+            sum2 = 0
+            for j in range(i + 1, n):
+                A_ij = A[i][j]
+                x_old_j = x_old[j]
+                sum2 += A_ij * x_old_j
+            
             x[i] = (b[i] - sum1 - sum2) / A[i][i]
 
         # Calcula os erros relativos
@@ -57,7 +67,7 @@ x0 = np.zeros(len(b))
 
 # Tolerância e número máximo de iterações
 tol = 1e-10
-max_iter = 1000
+max_iter = 1
 
 # Executando o método de Gauss-Seidel
 sol, iterations, history_df = gauss_seidel(A, b, x0, tol, max_iter)
